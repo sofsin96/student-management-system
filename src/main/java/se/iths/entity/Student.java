@@ -20,6 +20,7 @@ public class Student {
     private String lastName;
     @NotEmpty @NotNull
     private String email;
+
     private String phoneNumber;
 
     public Long getId() {

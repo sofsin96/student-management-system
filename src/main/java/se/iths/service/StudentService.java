@@ -1,16 +1,15 @@
 package se.iths.service;
 
 import se.iths.entity.Student;
+import se.iths.rest.exception.StudentNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,7 +24,11 @@ public class StudentService {
     }
 
     public Student findStudentById(Long id) {
-        return entityManager.find(Student.class, id);
+        Student foundStudent = entityManager.find(Student.class, id);
+        if (foundStudent == null) {
+            throw new StudentNotFoundException("{\"message\":\"Student with id " + id + " not found.\"}");
+        }
+        return foundStudent;
     }
 
     public List<Student> findStudentByLastName(String lastName) {
@@ -39,9 +42,7 @@ public class StudentService {
     }
 
     public Student replaceStudent(Long id, Student student) {
-        Student foundStudent = entityManager.find(Student.class, id);
-
-        // TODO: check if mandatory field is null or empty
+        Student foundStudent = findStudentById(id);
 
         if (student != null) {
             foundStudent.setFirstName(student.getFirstName());
@@ -49,7 +50,6 @@ public class StudentService {
             foundStudent.setEmail(student.getEmail());
             foundStudent.setPhoneNumber(student.getPhoneNumber());
         }
-
         entityManager.merge(foundStudent);
         return foundStudent;
     }
@@ -61,7 +61,7 @@ public class StudentService {
     }
 
     public void deleteStudent(Long id) {
-        Student foundStudent = entityManager.find(Student.class, id);
+        Student foundStudent = findStudentById(id);
         entityManager.remove(foundStudent);
     }
 }

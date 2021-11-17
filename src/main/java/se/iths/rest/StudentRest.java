@@ -1,6 +1,7 @@
 package se.iths.rest;
 
 import se.iths.entity.Student;
+import se.iths.rest.validation.RequestBody;
 import se.iths.service.StudentService;
 
 import javax.inject.Inject;
@@ -16,18 +17,13 @@ public class StudentRest {
     @Inject
     StudentService studentService;
 
+    @Inject
+    RequestBody requestBody;
+
     @Path("")
     @POST
     public Response createStudent(Student student) {
-        if (student.getFirstName() == null || student.getFirstName().isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"message\":\"Mandatory field is missing.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
-        }
-
-        // TODO: check if lastname and email is null or empty.
-
+        requestBody.invalidRequestBody(student);
         studentService.createStudent(student);
         return Response.status(Response.Status.CREATED).entity(student).build();
     }
@@ -35,12 +31,12 @@ public class StudentRest {
     @Path("{id}")
     @GET
     public Response getStudent(@PathParam("id") Long id) {
-        if (studentService.findStudentById(id) == null) {
+       /* if (studentService.findStudentById(id) == null) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"Student with id " + id + " not found.\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build());
-        }
+        }*/
         return Response.ok(studentService.findStudentById(id)).build();
     }
 
@@ -53,15 +49,18 @@ public class StudentRest {
     @Path("getAllByLastName")
     @GET
     public Response getAllStudentsByLastName(@QueryParam("lastname") String lastName) {
-
-        // TODO: json response when the lastname was not found.
-        // TODO: add equalsIgnoreCase
-
         if (lastName.isEmpty()) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                            .entity("{\"message\":\"lastName parameter is mandatory.\"}")
-                            .type(MediaType.APPLICATION_JSON)
-                            .build());
+                    .entity("{\"message\":\"lastname parameter is mandatory.\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
+        }
+
+        if (studentService.findStudentByLastName(lastName).isEmpty()) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"message\":\"Could not find student with last name " + lastName + ".\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
         }
         return Response.ok(studentService.findStudentByLastName(lastName)).build();
     }
@@ -69,25 +68,31 @@ public class StudentRest {
     @Path("{id}")
     @PUT
     public Response replaceStudent(@PathParam("id") Long id, Student student) {
-        // TODO: json response when mandatory field is null or empty
-
-        if (studentService.findStudentById(id) == null) {
+        /*if (studentService.findStudentById(id) == null) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"Student with id " + id + " not found.\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build());
-        }
+        }*/
+        requestBody.invalidRequestBody(student);
         return Response.ok(studentService.replaceStudent(id, student)).build();
     }
 
     @Path("{id}")
     @PATCH
     public Response updateEmail(@PathParam("id") Long id, @QueryParam("email") String email) {
-        // TODO: check if email parameter is null or empty -> json response
-
-        if (studentService.findStudentById(id) == null) {
+        /*if (studentService.findStudentById(id) == null) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"Student with id " + id + " not found.\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
+        }*/
+
+        // TODO: check when id does not exist and email is null.
+
+        if (email.isEmpty()) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"message\":\"email parameter is mandatory.\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build());
         }
@@ -97,12 +102,12 @@ public class StudentRest {
     @Path("{id}")
     @DELETE
     public Response deleteStudent(@PathParam("id") Long id) {
-        if (studentService.findStudentById(id) == null) {
+        /*if (studentService.findStudentById(id) == null) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"Student with id " + id + " not found.\"}")
-                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .type(MediaType.APPLICATION_JSON)
                     .build());
-        }
+        }*/
         studentService.deleteStudent(id);
         return Response.ok().build();
     }
