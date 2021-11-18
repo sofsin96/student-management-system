@@ -55,7 +55,7 @@ public class StudentService {
     }
 
     public Student updateEmail(Long id, String email) {
-        Student foundStudent = entityManager.find(Student.class, id);
+        Student foundStudent = findStudentById(id);
         foundStudent.setEmail(email);
         return foundStudent;
     }

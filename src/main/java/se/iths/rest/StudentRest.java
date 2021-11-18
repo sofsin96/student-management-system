@@ -31,12 +31,6 @@ public class StudentRest {
     @Path("{id}")
     @GET
     public Response getStudent(@PathParam("id") Long id) {
-       /* if (studentService.findStudentById(id) == null) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"message\":\"Student with id " + id + " not found.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
-        }*/
         return Response.ok(studentService.findStudentById(id)).build();
     }
 
@@ -68,12 +62,6 @@ public class StudentRest {
     @Path("{id}")
     @PUT
     public Response replaceStudent(@PathParam("id") Long id, Student student) {
-        /*if (studentService.findStudentById(id) == null) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"message\":\"Student with id " + id + " not found.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
-        }*/
         requestBody.invalidRequestBody(student);
         return Response.ok(studentService.replaceStudent(id, student)).build();
     }
@@ -81,15 +69,6 @@ public class StudentRest {
     @Path("{id}")
     @PATCH
     public Response updateEmail(@PathParam("id") Long id, @QueryParam("email") String email) {
-        /*if (studentService.findStudentById(id) == null) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"message\":\"Student with id " + id + " not found.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
-        }*/
-
-        // TODO: check when id does not exist and email is null.
-
         if (email.isEmpty()) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"message\":\"email parameter is mandatory.\"}")
@@ -102,12 +81,6 @@ public class StudentRest {
     @Path("{id}")
     @DELETE
     public Response deleteStudent(@PathParam("id") Long id) {
-        /*if (studentService.findStudentById(id) == null) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"message\":\"Student with id " + id + " not found.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
-        }*/
         studentService.deleteStudent(id);
         return Response.ok().build();
     }
