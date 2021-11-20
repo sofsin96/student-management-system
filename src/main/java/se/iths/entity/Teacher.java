@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Student {
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,18 +25,8 @@ public class Student {
 
     private String phoneNumber;
 
-    @ManyToMany(mappedBy = "students")
-    private Set<Subject> subjects = new HashSet<>();
-
-    public void addSubject(Subject subject){
-        this.subjects.add(subject);
-        subject.getStudents().add(this);
-    }
-
-    public void removeSubject(Subject subject) {
-        this.subjects.remove(subject);
-        subject.getStudents().remove(this);
-    }
+    @OneToMany(mappedBy = "teacher")
+    private Set<Subject> subjects = new HashSet<Subject>();
 
     public Long getId() {
         return id;
