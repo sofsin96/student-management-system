@@ -20,7 +20,7 @@ public class SampleDataGenerator {
     @PostConstruct
     public void generateData() {
         Student student1 = new Student("Sofia", "Rodriguez", "sofia@iths.se");
-        Student student2 = new Student("Gabrielle", "Eltonius", "gabrielle@nexergrup.se", "0123456789");
+        Student student2 = new Student("Gabrielle", "Eltonius", "gabrielle@nexergroup.se", "0123456789");
 
         Subject subject1 = new Subject("C#");
         Subject subject2 = new Subject("Java");
