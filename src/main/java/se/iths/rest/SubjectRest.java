@@ -64,4 +64,24 @@ public class SubjectRest {
         subjectService.deleteSubject(id);
         return Response.ok().build();
     }
+
+    @Path("{id}/add/student/{studentID}")
+    @POST
+    public Subject addStudent(@PathParam("id") Long id, @PathParam("studentID") Long studentID) {
+        return subjectService.addStudent(id, studentID);
+    }
+
+    @Path("{id}/delete/student/{studentID}")
+    @POST
+    public Response deleteStudent(@PathParam("id") Long id, @PathParam("studentID") Long studentID) {
+        Subject subject = subjectService.removeStudent(id, studentID);
+        return Response.ok(subject).build();
+    }
+
+    @Path("{id}/add/teacher/{teacherID}")
+    @POST
+    public Subject addTeacher(@PathParam("id") Long id, @PathParam("teacherID")  Long teacherID) {
+        return subjectService.addTeacher(id, teacherID);
+    }
+
 }

@@ -1,6 +1,7 @@
 package se.iths.rest;
 
 import se.iths.entity.Teacher;
+import se.iths.rest.exception.BadRequestException;
 import se.iths.service.TeacherService;
 
 import javax.inject.Inject;
@@ -19,7 +20,17 @@ public class TeacherRest {
     @Path("")
     @POST
     public Response createTeacher(Teacher teacher) {
-        // TODO: validate fields
+        if (teacher.getFirstName() == null || teacher.getFirstName().isEmpty()) {
+            throw new BadRequestException("{\"message\":\"First name is required.\"}");
+        }
+
+        if (teacher.getLastName() == null || teacher.getLastName().isEmpty()) {
+            throw new BadRequestException("{\"message\":\"Last name is required.\"}");
+        }
+
+        if (teacher.getEmail() == null || teacher.getEmail().isEmpty()) {
+            throw new BadRequestException("{\"message\":\"Email is required.\"}");
+        }
         teacherService.createTeacher(teacher);
         return Response.status(Response.Status.CREATED).entity(teacher).build();
     }

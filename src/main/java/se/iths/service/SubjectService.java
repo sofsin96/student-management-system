@@ -2,12 +2,14 @@ package se.iths.service;
 
 import se.iths.entity.Student;
 import se.iths.entity.Subject;
-import se.iths.rest.exception.StudentNotFoundException;
+import se.iths.entity.Teacher;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -20,6 +22,12 @@ public class SubjectService {
     @PersistenceContext
     EntityManager entityManager;
 
+    @Inject
+    StudentService studentService;
+
+    @Inject
+    TeacherService teacherService;
+
     public void createSubject(Subject subject) {
         entityManager.persist(subject);
     }
@@ -27,8 +35,7 @@ public class SubjectService {
     public Subject findSubjectById(Long id) {
         Subject foundSubject = entityManager.find(Subject.class, id);
         if (foundSubject == null) {
-            throw new StudentNotFoundException("{\"message\":\"Subject with id " + id + " not found.\"}");
-            // TODO: create NotFoundException class
+            throw new NotFoundException("{\"message\":\"Subject with id " + id + " not found.\"}");
         }
         return foundSubject;
     }
@@ -45,8 +52,30 @@ public class SubjectService {
 
     public void deleteSubject(Long id) {
         Subject foundSubject = findSubjectById(id);
+        foundSubject.getStudents().forEach(s-> s.getSubjects().remove(foundSubject));
         entityManager.remove(foundSubject);
     }
 
-    // TODO: get subject (information, students and teacher)
+    public Subject addStudent(Long id, Long studentID) {
+        Subject foundSubject = findSubjectById(id);
+        Student foundStudent = studentService.findStudentById(studentID);
+        foundSubject.addStudent(foundStudent);
+        entityManager.persist(foundSubject);
+        return foundSubject;
+    }
+    public Subject removeStudent(Long id, Long studentID) {
+        Subject foundSubject = findSubjectById(id);
+        Student foundStudent = studentService.findStudentById(studentID);
+        foundSubject.removeStudent(foundStudent);
+        entityManager.persist(foundSubject);
+        return foundSubject;
+    }
+
+    public Subject addTeacher(Long id, Long teacherID) {
+        Subject foundSubject = findSubjectById(id);
+        Teacher foundTeacher = teacherService.findTeacherById(teacherID);
+        foundSubject.setTeacher(foundTeacher);
+        foundTeacher.addSubject(foundSubject);
+        return foundSubject;
+    }
 }

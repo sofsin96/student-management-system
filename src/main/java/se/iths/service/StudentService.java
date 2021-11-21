@@ -62,6 +62,7 @@ public class StudentService {
 
     public void deleteStudent(Long id) {
         Student foundStudent = findStudentById(id);
+        foundStudent.getSubjects().forEach(s -> s.getStudents().remove(foundStudent));
         entityManager.remove(foundStudent);
     }
 }
