@@ -36,6 +36,7 @@ public class SampleDataGenerator {
 
         teacher1.addSubject(subject2);
         teacher2.addSubject(subject3);
+        teacher2.addSubject(subject1);
 
         entityManager.persist(student1);
         entityManager.persist(student2);
