@@ -20,6 +20,9 @@ public class TeacherRest {
     @Path("")
     @POST
     public Response createTeacher(Teacher teacher) {
+
+        // TODO: extract method
+
         if (teacher.getFirstName() == null || teacher.getFirstName().isEmpty()) {
             throw new BadRequestException("{\"message\":\"First name is required.\"}");
         }

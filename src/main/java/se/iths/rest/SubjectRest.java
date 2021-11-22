@@ -39,7 +39,7 @@ public class SubjectRest {
         return Response.ok(subjectService.getAllSubjects()).build();
     }
 
-    @Path("getAllByLastName")
+    @Path("getAllByName")
     @GET
     public Response getAllSubjectsByName(@QueryParam("name") String name) {
         if (name.isEmpty()) {
@@ -74,7 +74,7 @@ public class SubjectRest {
     @Path("{id}/delete/student/{studentID}")
     @POST
     public Response deleteStudent(@PathParam("id") Long id, @PathParam("studentID") Long studentID) {
-        Subject subject = subjectService.removeStudent(id, studentID);
+        Subject subject = subjectService.deleteStudent(id, studentID);
         return Response.ok(subject).build();
     }
 
@@ -84,4 +84,5 @@ public class SubjectRest {
         return subjectService.addTeacher(id, teacherID);
     }
 
+    // TODO: delete teacher endpoint
 }

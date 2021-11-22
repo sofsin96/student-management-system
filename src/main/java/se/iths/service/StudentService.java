@@ -42,6 +42,7 @@ public class StudentService {
     }
 
     public Student replaceStudent(Long id, Student student) {
+        // TODO: extract method
         Student foundStudent = findStudentById(id);
 
         if (student != null) {

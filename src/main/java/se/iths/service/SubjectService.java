@@ -63,7 +63,7 @@ public class SubjectService {
         entityManager.persist(foundSubject);
         return foundSubject;
     }
-    public Subject removeStudent(Long id, Long studentID) {
+    public Subject deleteStudent(Long id, Long studentID) {
         Subject foundSubject = findSubjectById(id);
         Student foundStudent = studentService.findStudentById(studentID);
         foundSubject.removeStudent(foundStudent);

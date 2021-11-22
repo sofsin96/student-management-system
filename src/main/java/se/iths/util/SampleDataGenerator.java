@@ -27,7 +27,7 @@ public class SampleDataGenerator {
         Subject subject3 = new Subject("Test");
 
         Teacher teacher1 = new Teacher("Pontus", "Redig", "pontus@iths.se");
-        Teacher teacher2 = new Teacher("John", "Smith", "john@gmail.com");
+        Teacher teacher2 = new Teacher("John", "Smith", "john@gmail.com", "0123456789");
 
         student1.addSubject(subject1);
         student1.addSubject(subject2);
