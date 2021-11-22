@@ -1,6 +1,7 @@
 package se.iths.rest;
 
 import se.iths.entity.Student;
+import se.iths.rest.exception.BadRequestException;
 import se.iths.rest.validation.RequestBody;
 import se.iths.service.StudentService;
 
@@ -23,7 +24,7 @@ public class StudentRest {
     @Path("")
     @POST
     public Response createStudent(Student student) {
-        requestBody.invalidRequestBody(student);
+        requestBody.invalidRequestBody(student.getFirstName(), student.getLastName(), student.getEmail());
         studentService.createStudent(student);
         return Response.status(Response.Status.CREATED).entity(student).build();
     }
@@ -44,17 +45,11 @@ public class StudentRest {
     @GET
     public Response getAllStudentsByLastName(@QueryParam("lastname") String lastName) {
         if (lastName.isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"message\":\"lastname parameter is mandatory.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
+            throw new BadRequestException("{\"message\":\"lastname parameter is mandatory.\"}");
         }
 
         if (studentService.findStudentByLastName(lastName).isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"message\":\"Could not find student with last name " + lastName + ".\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
+            throw new BadRequestException("{\"message\":\"Could not find student with last name " + lastName + ".\"}");
         }
         return Response.ok(studentService.findStudentByLastName(lastName)).build();
     }
@@ -62,7 +57,7 @@ public class StudentRest {
     @Path("{id}")
     @PUT
     public Response replaceStudent(@PathParam("id") Long id, Student student) {
-        requestBody.invalidRequestBody(student);
+        requestBody.invalidRequestBody(student.getFirstName(), student.getLastName(), student.getEmail());
         return Response.ok(studentService.replaceStudent(id, student)).build();
     }
 
@@ -70,10 +65,7 @@ public class StudentRest {
     @PATCH
     public Response updateEmail(@PathParam("id") Long id, @QueryParam("email") String email) {
         if (email.isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"message\":\"email parameter is mandatory.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
+            throw new BadRequestException("{\"message\":\"email parameter is mandatory.\"}");
         }
         return Response.ok(studentService.updateEmail(id, email)).build();
     }

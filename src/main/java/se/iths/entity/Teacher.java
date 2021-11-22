@@ -11,7 +11,7 @@ import java.util.Set;
 public class Teacher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty
@@ -58,6 +58,8 @@ public class Teacher {
 
     public void removeSubject(Subject subject) {
         this.subjects.remove(subject);
+        subjects.remove(subject);
+        subject.setTeacher(null);
     }
 
     public Long getId() {

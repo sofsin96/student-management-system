@@ -43,17 +43,11 @@ public class SubjectRest {
     @GET
     public Response getAllSubjectsByName(@QueryParam("name") String name) {
         if (name.isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"message\":\"name parameter is mandatory.\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
+            throw new BadRequestException("{\"message\":\"name parameter is mandatory.\"}");
         }
 
         if (subjectService.findSubjectByName(name).isEmpty()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"message\":\"Could not find subject with name " + name + ".\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build());
+            throw new BadRequestException("{\"message\":\"Could not find subject with name " + name + ".\"}");
         }
         return Response.ok(subjectService.findSubjectByName(name)).build();
     }
@@ -84,5 +78,10 @@ public class SubjectRest {
         return subjectService.addTeacher(id, teacherID);
     }
 
-    // TODO: delete teacher endpoint
+    @Path("{id}/delete/teacher/{teacherID}")
+    @POST
+    public Response deleteTeacher(@PathParam("id") Long id, @PathParam("teacherID") Long teacherID) {
+        Subject subject = subjectService.deleteTeacher(id, teacherID);
+        return Response.ok(subject).build();
+    }
 }

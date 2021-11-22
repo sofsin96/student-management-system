@@ -3,13 +3,13 @@ package se.iths.service;
 import se.iths.entity.Student;
 import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
+import se.iths.rest.exception.NotFoundException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -76,6 +76,15 @@ public class SubjectService {
         Teacher foundTeacher = teacherService.findTeacherById(teacherID);
         foundSubject.setTeacher(foundTeacher);
         foundTeacher.addSubject(foundSubject);
+        return foundSubject;
+    }
+
+    public Subject deleteTeacher(Long id, Long teacherID) {
+        Subject foundSubject = findSubjectById(id);
+        Teacher foundTeacher = teacherService.findTeacherById(teacherID);
+        foundSubject.setTeacher(null);
+        foundTeacher.removeSubject(foundSubject);
+        entityManager.persist(foundSubject);
         return foundSubject;
     }
 }

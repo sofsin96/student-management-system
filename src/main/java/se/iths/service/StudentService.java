@@ -1,7 +1,7 @@
 package se.iths.service;
 
 import se.iths.entity.Student;
-import se.iths.rest.exception.StudentNotFoundException;
+import se.iths.rest.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +26,7 @@ public class StudentService {
     public Student findStudentById(Long id) {
         Student foundStudent = entityManager.find(Student.class, id);
         if (foundStudent == null) {
-            throw new StudentNotFoundException("{\"message\":\"Student with id " + id + " not found.\"}");
+            throw new NotFoundException("{\"message\":\"Student with id " + id + " not found.\"}");
         }
         return foundStudent;
     }
@@ -42,7 +42,6 @@ public class StudentService {
     }
 
     public Student replaceStudent(Long id, Student student) {
-        // TODO: extract method
         Student foundStudent = findStudentById(id);
 
         if (student != null) {
